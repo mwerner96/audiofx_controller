@@ -8,3 +8,7 @@ Made with [Tkinter](https://docs.python.org/3/library/tkinter.html) and [pyseria
 Run it from the command line with
 
     python3 controller.py
+
+If you have trouble accessing the serial ports, try running it as root (or administrator on win).
+
+If the script doesn't start at all, mabe you are missing the Tkinter and pyserial libraries.
