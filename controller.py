@@ -7,11 +7,13 @@ class DelayChannel:
         self.channel = channel
         self.index = index
 
-        self.scale_vol = Scale(master=root, from_=4, to=0, resolution = 0.01, command=handleVolume(index, 0, self), length = 200, label = 'vol', troughcolor='green')
+        module = index+3 if channel == 'l' else index+8
+        self.scale_vol = Scale(master=root, from_=4, to=0, resolution = 0.01, command=handleVolume(module, 0, self), length = 200, label = 'vol', troughcolor='green')
         self.scale_vol.grid(row = base_row, column = base_col, padx=0, pady=5)
         self.scale_vol.set(0)
 
-        self.scale_del = Scale(master=root, from_=6, to=0, resolution = 0.01, command=handleDelay(index, 0, self), length = 200, label = 'del')
+        register = index+2 if channel == 'l' else index+7
+        self.scale_del = Scale(master=root, from_=6, to=0, resolution = 0.01, command=handleDelay(1, register, self), length = 200, label = 'del')
         self.scale_del.grid(row = base_row, column = base_col+1, padx=0, pady=5)
         self.scale_del.set(0)
 
@@ -48,7 +50,8 @@ def sendDelay(module, register, slider):
     sendVal(module, register, val)
 
 def handleSlider(i):
-    return lambda val : sendVolume(i, 0, faders[i])
+    module = 2 if i == 0 else 13
+    return lambda val : sendVolume(module, 0, faders[i])
 
 def handleVolume(module, register, slider):
     return lambda val : sendVolume(module, register, slider.scale_vol)
@@ -60,11 +63,11 @@ def updateCheckbox():
     val = 0
     for count, box in enumerate(checkboxes_left):
         val |= box.get() << count
-    sendVal(0, 0, val)
+    sendVal(1, 0, val)
     val = 0
     for count, box in enumerate(checkboxes_right):
         val |= box.get() << count
-    sendVal(0, 1, val)
+    sendVal(1, 1, val)
 
 def openSerial():
     if ser.is_open:
